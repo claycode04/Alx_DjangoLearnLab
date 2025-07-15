@@ -9,9 +9,9 @@ from bookshelf.models import Book
 
 # Create a new Book instance
 book = Book.objects.create(
-    title="Django for Beginners",
-    author="William S. Vincent",
-    publication_year=2022,
+    title="1984",
+    author="George Orwell",
+    publication_year=1949,
     isbn="9781735467207",
     pages=400,
     cover="soft",

@@ -15,7 +15,7 @@ try:
     print(f"Original title: {book.title}")
     
     # Update the title
-    book.title = "Django for Beginners: Build websites with Python and Django"
+    book.title = "Nineteen Eighty-Four"
     book.save()
     
     print(f"Updated title: {book.title}")
