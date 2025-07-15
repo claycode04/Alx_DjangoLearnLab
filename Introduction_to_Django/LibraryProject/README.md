@@ -7,7 +7,10 @@ A modern, efficient library management system built with Django 5.2.4. This proj
 - **Book Management**: Add, edit, delete, and search books
 - **User Authentication**: Secure login/logout system
 - **Book Borrowing**: Track book loans and returns
-- **Admin Interface**: Powerful Django admin for management
+- **Admin Interface**: Powerful Django admin for management with custom configurations
+- **Advanced Search**: Search books by title, author, or ISBN
+- **Smart Filtering**: Filter by publication year, cover type, and language
+- **Bulk Actions**: Perform bulk operations on multiple books
 - **Responsive Design**: Mobile-friendly interface
 - **Fast Search**: Optimized database queries
 - **Clean Code**: Following Django best practices
