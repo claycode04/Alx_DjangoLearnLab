@@ -49,7 +49,7 @@ except Book.DoesNotExist:
 ### Filter Books
 ```python
 # Filter books by author
-vincent_books = Book.objects.filter(author="William S. Vincent")
+vincent_books = Book.objects.filter(author="George Orwell")
 print("Books by William S. Vincent:")
 for book in vincent_books:
     print(f"- {book}")
@@ -70,7 +70,7 @@ print(f"Softcover books: {softcover_books.count()}")
 ### Search Operations
 ```python
 # Case-insensitive search in title
-django_books = Book.objects.filter(title__icontains="django")
+django_books = Book.objects.filter(title__icontains="1984")
 print("Books with 'django' in title:")
 for book in django_books:
     print(f"- {book}")
