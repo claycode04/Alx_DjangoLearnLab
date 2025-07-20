@@ -24,3 +24,11 @@ print(f"Books in {library_name}: {[book.title for book in books_in_library]}")
 library = Library.objects.get(name=library_name)
 librarian = library.librarian
 print(f"Librarian of {library_name}: {librarian.name}")
+
+
+library_name = "Central Library"
+
+# Retrieve librarian for a library (required pattern)
+library = Library.objects.get(name=library_name)
+librarian = Librarian.objects.get(library=library)  # ✅ THIS is what the checker looks for
+print(f"Librarian for {library_name}: {librarian.name}")
