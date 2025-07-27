@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Book, Library
+from django.contrib.auth.admin import UserAdmin
+from .models import Book, Library, CustomUser
 
 
 @admin.register(Book)
@@ -69,3 +70,17 @@ class LibraryAdmin(admin.ModelAdmin):
         """Display the number of books in each library."""
         return obj.books.count()
     book_count.short_description = 'Number of Books'
+
+
+class CustomUserAdmin(UserAdmin):
+    model = CustomUser
+    fieldsets = UserAdmin.fieldsets + (
+        (None, {'fields': ('date_of_birth', 'profile_photo')}),
+    )
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        (None, {'fields': ('date_of_birth', 'profile_photo')}),
+    )
+    list_display = ['username', 'email', 'date_of_birth', 'is_staff', 'is_superuser']
+    search_fields = ['username', 'email']
+
+admin.site.register(CustomUser, CustomUserAdmin)
