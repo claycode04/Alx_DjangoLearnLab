@@ -5,11 +5,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-@%&g81nq-hu6jq2jgym4h1%e!4!g$9cthm2-znxi2#gwn6b0#t'
 DEBUG = False  # Set to False in production for security
 ALLOWED_HOSTS = ['yourdomain.com', 'localhost', '127.0.0.1']  # Update with your production domain
-# Security best practices
+
+# Security best practices and HTTPS enforcement
+# SECURE_SSL_REDIRECT: Redirect all HTTP requests to HTTPS
+SECURE_SSL_REDIRECT = True
+# SECURE_HSTS_SECONDS: Instruct browsers to only access the site via HTTPS for the specified time (1 year)
+SECURE_HSTS_SECONDS = 31536000
+# SECURE_HSTS_INCLUDE_SUBDOMAINS: Apply HSTS to all subdomains
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD: Allow site to be included in browser preload lists
+SECURE_HSTS_PRELOAD = True
+# SECURE_BROWSER_XSS_FILTER: Enable browser’s XSS filtering
 SECURE_BROWSER_XSS_FILTER = True
+# X_FRAME_OPTIONS: Prevent site from being framed (clickjacking protection)
 X_FRAME_OPTIONS = 'DENY'
+# SECURE_CONTENT_TYPE_NOSNIFF: Prevent browsers from MIME-sniffing a response away from the declared content-type
 SECURE_CONTENT_TYPE_NOSNIFF = True
+# CSRF_COOKIE_SECURE: Ensure CSRF cookies are only sent over HTTPS
 CSRF_COOKIE_SECURE = True
+# SESSION_COOKIE_SECURE: Ensure session cookies are only sent over HTTPS
 SESSION_COOKIE_SECURE = True
 
 INSTALLED_APPS = [
@@ -74,9 +88,10 @@ USE_TZ = True
 STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Custom user model
+
 # Custom user model
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
+
 
 # Content Security Policy (CSP) example
 # You can use django-csp or set headers manually in middleware/views
@@ -86,3 +101,22 @@ AUTH_USER_MODEL = 'bookshelf.CustomUser'
 # CSP_DEFAULT_SRC = ("'self'",)
 # CSP_SCRIPT_SRC = ("'self'",)
 # CSP_STYLE_SRC = ("'self'",)
+
+# Deployment Configuration:
+# To enable HTTPS, configure your web server (e.g., Nginx, Apache) with SSL/TLS certificates.
+# Example Nginx snippet:
+#
+# server {
+#     listen 443 ssl;
+#     server_name yourdomain.com;
+#     ssl_certificate /etc/ssl/certs/yourdomain.com.crt;
+#     ssl_certificate_key /etc/ssl/private/yourdomain.com.key;
+#     ...
+# }
+
+# Security Review:
+# - All cookies are secure and only sent over HTTPS.
+# - All HTTP requests are redirected to HTTPS.
+# - HSTS is enabled for 1 year, including subdomains and preload.
+# - XSS, clickjacking, and MIME sniffing protections are enabled.
+# - See SECURITY_README.md for further details and recommendations.
