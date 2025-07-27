@@ -1,3 +1,4 @@
+from .models import Library
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404
@@ -87,7 +88,10 @@ def list_books(request):
     books = Book.objects.all()  # Required by the checker
     return render(request, 'relationship_app/list_books.html', {'books': books})
 
-# Class-based view to display details of a specific library
+
+# Class-based view to display details of a specific library using DetailView
+from django.views.generic.detail import DetailView
+
 class LibraryDetailView(DetailView):
     model = Library
     template_name = 'relationship_app/library_detail.html'
