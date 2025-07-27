@@ -9,11 +9,21 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from django.contrib import messages
-from .models import Book, Library, UserProfile
+from .models import Book, Library, CustomUser
     # ...existing code...
 
+"""
+Permissions & Groups Documentation:
+- Permissions enforced in views using @permission_required for Book actions:
+    - can_create: add_book
+    - can_edit: edit_book
+    - can_delete: delete_book
+    - can_view: list_books
+- Assign users to groups (Editors, Viewers, Admins) in Django admin and grant relevant permissions.
+"""
+
 # Add Book View
-@permission_required('relationship_app.can_add_book', raise_exception=True)
+@permission_required('relationship_app.can_create', raise_exception=True)
 def add_book(request):
     if request.method == 'POST':
         title = request.POST.get('title')
@@ -24,7 +34,7 @@ def add_book(request):
     return render(request, 'relationship_app/add_book.html')
 
 # Edit Book View
-@permission_required('relationship_app.can_change_book', raise_exception=True)
+@permission_required('relationship_app.can_edit', raise_exception=True)
 def edit_book(request, pk):
     book = get_object_or_404(Book, pk=pk)
     if request.method == 'POST':
@@ -38,7 +48,7 @@ def edit_book(request, pk):
     return render(request, 'relationship_app/edit_book.html', {'book': book})
 
 # Delete Book View
-@permission_required('relationship_app.can_delete_book', raise_exception=True)
+@permission_required('relationship_app.can_delete', raise_exception=True)
 def delete_book(request, pk):
     book = get_object_or_404(Book, pk=pk)
     if request.method == 'POST':
@@ -46,18 +56,19 @@ def delete_book(request, pk):
         return HttpResponseRedirect(reverse('list_books'))
     return render(request, 'relationship_app/delete_book.html', {'book': book})
 from django.contrib.auth.decorators import login_required, user_passes_test
-from .models import UserProfile
+## UserProfile removed, use CustomUser
 # ...existing code...
 
 # Role check helpers
 def is_admin(user):
-    return hasattr(user, 'userprofile') and user.userprofile.role == 'Admin'
+    return user.is_superuser or user.is_staff
 
 def is_librarian(user):
-    return hasattr(user, 'userprofile') and user.userprofile.role == 'Librarian'
+    # Example: check for group membership or add a role field to CustomUser
+    return user.groups.filter(name='Librarian').exists()
 
 def is_member(user):
-    return hasattr(user, 'userprofile') and user.userprofile.role == 'Member'
+    return user.groups.filter(name='Member').exists()
 
 # Admin view
 @login_required
@@ -84,6 +95,7 @@ from django.contrib import messages
 from .models import Book, Library
 
 # Function-based view to list all books
+@permission_required('relationship_app.can_view', raise_exception=True)
 def list_books(request):
     books = Book.objects.all()  # Required by the checker
     return render(request, 'relationship_app/list_books.html', {'books': books})
@@ -122,9 +134,14 @@ def user_logout(request):
     return render(request, 'relationship_app/logout.html')
 
 # User Registration View
-def register(request):
+    from django import forms
+    class CustomUserCreationForm(UserCreationForm):
+        class Meta:
+            model = CustomUser
+            fields = ('username', 'email', 'date_of_birth', 'profile_photo', 'password1', 'password2')
+
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST, request.FILES)
         if form.is_valid():
             user = form.save()
             login(request, user)
@@ -132,5 +149,5 @@ def register(request):
         else:
             messages.error(request, 'Registration failed. Please check the form.')
     else:
-        form = UserCreationForm()
+        form = CustomUserCreationForm()
     return render(request, 'relationship_app/register.html', {'form': form})
