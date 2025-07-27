@@ -1,9 +1,13 @@
-from django.contrib.auth.decorators import permission_required
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseForbidden, HttpResponseRedirect
 from django.urls import reverse
-from .models import Book
-# ...existing code...
+from django.views.generic.detail import DetailView
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
+from django.contrib import messages
+from .models import Book, Library, UserProfile
+    # ...existing code...
 
 # Add Book View
 @permission_required('relationship_app.can_add_book', raise_exception=True)
