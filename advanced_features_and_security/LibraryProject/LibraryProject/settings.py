@@ -114,6 +114,10 @@ AUTH_USER_MODEL = 'bookshelf.CustomUser'
 #     ...
 # }
 
+
+# SECURE_PROXY_SSL_HEADER: Use this when behind a proxy/load balancer that sets X-Forwarded-Proto
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # Security Review:
 # - All cookies are secure and only sent over HTTPS.
 # - All HTTP requests are redirected to HTTPS.
