@@ -5,11 +5,14 @@ from .models import Book
 from .serializers import BookSerializer
 
 
+
+# All views below use Django REST Framework's permission_classes to protect endpoints by user roles.
+
 # BookListView: Lists all books (GET)
 class BookListView(generics.ListAPIView):
     """
     List all books. Supports filtering, searching, and ordering.
-    Public access.
+    Public access. Uses DRF permission_classes for role-based protection.
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
@@ -24,7 +27,7 @@ class BookListView(generics.ListAPIView):
 class BookCreateView(generics.CreateAPIView):
     """
     Create a new book. Only authenticated users can create.
-    Handles data validation via serializer.
+    Handles data validation via serializer. Uses DRF permission_classes for role-based protection.
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
@@ -33,7 +36,7 @@ class BookCreateView(generics.CreateAPIView):
 # BookDetailView: Retrieve a book by ID (GET)
 class BookDetailView(generics.RetrieveAPIView):
     """
-    Retrieve a single book by ID. Public access.
+    Retrieve a single book by ID. Public access. Uses DRF permission_classes for role-based protection.
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
@@ -43,7 +46,7 @@ class BookDetailView(generics.RetrieveAPIView):
 class BookUpdateView(generics.UpdateAPIView):
     """
     Update a book. Only authenticated users can update.
-    Handles data validation via serializer.
+    Handles data validation via serializer. Uses DRF permission_classes for role-based protection.
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
@@ -52,7 +55,7 @@ class BookUpdateView(generics.UpdateAPIView):
 # BookDeleteView: Delete a book (DELETE)
 class BookDeleteView(generics.DestroyAPIView):
     """
-    Delete a book. Only authenticated users can delete.
+    Delete a book. Only authenticated users can delete. Uses DRF permission_classes for role-based protection.
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer

@@ -17,7 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+# The following line adds the new API URLs, including books/update and books/delete, to the project.
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('api.urls')),  # API endpoints
+    path('api/', include('api.urls')),  # API endpoints (includes books/update, books/delete)
 ]
