@@ -58,19 +58,13 @@ class BookDeleteView(generics.DestroyAPIView):
     serializer_class = BookSerializer
     permission_classes = [permissions.IsAuthenticated]
 
-# BookDetailView: Retrieve, update, or delete a book by ID.
-class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Book.objects.all()
-    serializer_class = BookSerializer
-    # Allow anyone to view, but only authenticated users can update/delete
-    def get_permissions(self):
-        if self.request.method in ['PUT', 'PATCH', 'DELETE']:
-            return [permissions.IsAuthenticated()]
-        return [permissions.AllowAny()]
 
 # Documentation:
-# - BookListView handles GET (list all books) and POST (create book) requests.
-#   - POST is restricted to authenticated users.
-# - BookDetailView handles GET (retrieve), PUT/PATCH (update), and DELETE requests for a single book.
-#   - Update and delete are restricted to authenticated users.
-# - Custom get_permissions methods enforce these rules.
+# - BookListView: GET /api/books/ (public, supports filtering, searching, ordering)
+# - BookCreateView: POST /api/books/create/ (authenticated only)
+# - BookDetailView: GET /api/books/<id>/ (public)
+# - BookUpdateView: PUT/PATCH /api/books/<id>/update/ (authenticated only)
+# - BookDeleteView: DELETE /api/books/<id>/delete/ (authenticated only)
+# Filtering: /api/books/?title=BookTitle&author=1&publication_year=2020
+# Searching: /api/books/?search=keyword
+# Ordering: /api/books/?ordering=title or /api/books/?ordering=-publication_year
