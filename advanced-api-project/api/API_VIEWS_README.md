@@ -5,17 +5,23 @@ This document describes the configuration and behavior of the Book API views in 
 ## Endpoints
 
 - `GET /api/books/` — List all books (public)
-- `POST /api/books/` — Create a new book (authenticated users only)
+- `POST /api/books/create/` — Create a new book (authenticated users only)
 - `GET /api/books/<id>/` — Retrieve a book by ID (public)
-- `PUT/PATCH /api/books/<id>/` — Update a book (authenticated users only)
-- `DELETE /api/books/<id>/` — Delete a book (authenticated users only)
+- `PUT/PATCH /api/books/<id>/update/` — Update a book (authenticated users only)
+- `DELETE /api/books/<id>/delete/` — Delete a book (authenticated users only)
 
 ## View Classes
 
 - **BookListView**: Handles listing and creation of books. Uses DRF's `ListCreateAPIView`.
   - Permissions: Anyone can list, only authenticated users can create.
+- **BookCreateView**: Handles creation of a new book. Uses DRF's `CreateAPIView`.
+  - Permissions: Authenticated users only.
 - **BookDetailView**: Handles retrieve, update, and delete for a single book. Uses DRF's `RetrieveUpdateDestroyAPIView`.
   - Permissions: Anyone can retrieve, only authenticated users can update or delete.
+- **BookUpdateView**: Handles updating a book. Uses DRF's `UpdateAPIView`.
+  - Permissions: Authenticated users only.
+- **BookDeleteView**: Handles deleting a book. Uses DRF's `DestroyAPIView`.
+  - Permissions: Authenticated users only.
 
 ## Permissions
 
@@ -28,6 +34,8 @@ This document describes the configuration and behavior of the Book API views in 
 - Views use DRF generic views for efficient CRUD handling.
 - Custom permission logic is implemented in `get_permissions`.
 - Book creation and update use the serializer's validation (including custom year validation).
+- Filtering, searching, and ordering are available on the list endpoint.
+- Data validation is handled by the serializer in create and update views.
 
 ## How to Test
 

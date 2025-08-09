@@ -4,28 +4,59 @@ from django_filters.rest_framework import DjangoFilterBackend
 from .models import Book
 from .serializers import BookSerializer
 
-# BookListView: Lists all books (GET) and allows creation (POST) for authenticated users.
-class BookListView(generics.ListCreateAPIView):
+
+# BookListView: Lists all books (GET)
+class BookListView(generics.ListAPIView):
+    """
+    List all books. Supports filtering, searching, and ordering.
+    Public access.
+    """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    # Enable filtering, searching, and ordering
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filterset_fields = ['title', 'author', 'publication_year']  # Filtering by these fields
-    search_fields = ['title', 'author__name']  # Search by book title or author name
-    ordering_fields = ['title', 'publication_year', 'author']  # Allow ordering by these fields
-    ordering = ['title']  # Default ordering
+    filterset_fields = ['title', 'author', 'publication_year']
+    search_fields = ['title', 'author__name']
+    ordering_fields = ['title', 'publication_year', 'author']
+    ordering = ['title']
+    permission_classes = [permissions.AllowAny]
 
-    # Allow anyone to view, but only authenticated users can create
-    def get_permissions(self):
-        if self.request.method == 'POST':
-            return [permissions.IsAuthenticated()]
-        return [permissions.AllowAny()]
+# BookCreateView: Create a new book (POST)
+class BookCreateView(generics.CreateAPIView):
+    """
+    Create a new book. Only authenticated users can create.
+    Handles data validation via serializer.
+    """
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
-    # Documentation:
-    # - Filtering: /api/books/?title=BookTitle&author=1&publication_year=2020
-    # - Searching: /api/books/?search=keyword (searches title and author name)
-    # - Ordering: /api/books/?ordering=title or /api/books/?ordering=-publication_year
-    # Multiple filters/search/orderings can be combined in a single request.
+# BookDetailView: Retrieve a book by ID (GET)
+class BookDetailView(generics.RetrieveAPIView):
+    """
+    Retrieve a single book by ID. Public access.
+    """
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [permissions.AllowAny]
+
+# BookUpdateView: Update a book (PUT/PATCH)
+class BookUpdateView(generics.UpdateAPIView):
+    """
+    Update a book. Only authenticated users can update.
+    Handles data validation via serializer.
+    """
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+# BookDeleteView: Delete a book (DELETE)
+class BookDeleteView(generics.DestroyAPIView):
+    """
+    Delete a book. Only authenticated users can delete.
+    """
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
 # BookDetailView: Retrieve, update, or delete a book by ID.
 class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
