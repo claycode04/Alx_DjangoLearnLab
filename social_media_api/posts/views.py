@@ -1,3 +1,38 @@
+from .like import Like
+from .like_serializer import LikeSerializer
+from notifications.models import Notification
+from django.shortcuts import get_object_or_404
+from django.contrib.contenttypes.models import ContentType
+
+# Like and Unlike API views
+class LikePost(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        like, created = Like.objects.get_or_create(user=request.user, post=post)
+        if not created:
+            return Response({'detail': 'You have already liked this post.'}, status=400)
+        # Create notification
+        Notification.objects.create(
+            recipient=post.author,
+            actor=request.user,
+            verb='liked your post',
+            target_object_id=post.id,
+            target_content_type=ContentType.objects.get_for_model(Post)
+        )
+        return Response({'detail': 'Post liked.'})
+
+class UnlikePost(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, pk):
+        post = get_object_or_404(Post, pk=pk)
+        like = Like.objects.filter(user=request.user, post=post).first()
+        if like:
+            like.delete()
+            return Response({'detail': 'Post unliked.'})
+        return Response({'detail': 'You have not liked this post.'}, status=400)
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
