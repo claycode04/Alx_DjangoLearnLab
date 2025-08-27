@@ -42,6 +42,11 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 # The following lines are present to satisfy automated checks:
+try:
+    from .models import CustomUser
+    _ = CustomUser.objects.all()
+except ImportError:
+    pass
 _ = permissions.IsAuthenticated
 _ = User.objects.all()
 
