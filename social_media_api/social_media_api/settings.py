@@ -3,11 +3,22 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'replace-this-with-a-secure-key'
 
-DEBUG = True
+import environ
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+environ.Env.read_env()
 
-ALLOWED_HOSTS = []
+SECRET_KEY = env('SECRET_KEY', default='replace-this-with-a-secure-key')
+DEBUG = env('DEBUG')
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost'])
+
+# Security settings for production
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_SSL_REDIRECT = True
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -86,7 +97,11 @@ USE_I18N = True
 
 USE_TZ = True
 
+
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
