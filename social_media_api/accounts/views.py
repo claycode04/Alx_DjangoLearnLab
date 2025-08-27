@@ -1,5 +1,6 @@
 from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
+
 class FollowUserView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -11,7 +12,18 @@ class FollowUserView(APIView):
         user_to_follow.followers.add(request.user)
         return Response({'success': f'You are now following {user_to_follow.username}.'})
 
-class UnfollowUserView(APIView):
+class Followuser(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, user_id):
+        user_to_follow = get_object_or_404(User, id=user_id)
+        if user_to_follow == request.user:
+            return Response({'error': 'You cannot follow yourself.'}, status=status.HTTP_400_BAD_REQUEST)
+        request.user.following.add(user_to_follow)
+        user_to_follow.followers.add(request.user)
+        return Response({'success': f'You are now following {user_to_follow.username}.'})
+
+class Unfollowuser(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request, user_id):

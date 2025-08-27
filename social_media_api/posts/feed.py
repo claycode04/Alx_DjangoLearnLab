@@ -5,7 +5,8 @@ from rest_framework import status
 from .models import Post
 from .serializers import PostSerializer
 
-class FeedView(APIView):
+
+class Feed(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
